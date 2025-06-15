@@ -1,16 +1,5 @@
-# dokanmate_app
+# DokanMate User App
+## ব্যবসা চলুক মুখের কথায় 
 
-We care your business
+![logo](https://github.com/user-attachments/assets/4c8448cc-8e2d-4cf9-8429-f521d8b3d546)
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
