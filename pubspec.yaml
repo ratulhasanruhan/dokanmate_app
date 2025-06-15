@@ -23,6 +23,8 @@ dependencies:
   get: ^4.7.2
   hive: ^2.2.3
   flutter_native_splash: ^2.4.6
+  flutter_screenutil: ^5.9.3
+
 
 dev_dependencies:
   flutter_test:
