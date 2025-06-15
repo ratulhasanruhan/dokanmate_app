@@ -14,6 +14,9 @@ class DashboardScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           appName,
+          style: TextStyle(
+            color: Colors.white
+          ),
         ),
       ),
     );

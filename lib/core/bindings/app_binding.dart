@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
+import '../../features/auth/controller/auth_controller.dart';
 
 class AppBinding extends Bindings {
   @override
   void dependencies() {
-    // Example:
-    // Get.lazyPut<YourController>(() => YourController());
+    Get.put<AuthController>(AuthController(), permanent: true);
   }
 }
