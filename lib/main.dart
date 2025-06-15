@@ -1,11 +1,18 @@
 import 'package:dokanmate_app/core/routes/app_routes.dart';
 import 'package:dokanmate_app/core/theme/app_themes.dart';
 import 'package:dokanmate_app/core/utils/constants.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async{
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 

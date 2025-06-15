@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "577982904760",
+    "project_id": "dokanmate",
+    "storage_bucket": "dokanmate.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577982904760:android:a82b228a4febbe93fd774d",
+        "android_client_info": {
+          "package_name": "com.appibrium.dokanmate_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK9cEBi_EXQeAZ2GdVcqT7sUMg8on6_H0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
