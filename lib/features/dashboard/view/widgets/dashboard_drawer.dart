@@ -1,0 +1,112 @@
+import 'package:dokanmate_app/core/utils/app_colors.dart';
+import 'package:dokanmate_app/core/utils/constants.dart';
+import 'package:dokanmate_app/features/auth/controller/auth_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
+
+class DashboardDrawer extends StatelessWidget {
+  DashboardDrawer({super.key});
+
+  final AuthController authController = Get.find<AuthController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: primaryColor.withValues(alpha: 0.2)
+      ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 38.r,
+                      backgroundImage: AssetImage('assets/images/logo.png'),
+                    ),
+                    Text(
+                      appName,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'ভার্সন: ১.০.০',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: Icon(Iconsax.home, color: primaryColor),
+            title: Text('ড্যাশবোর্ড', style: TextStyle(
+                color: primaryColor,
+            )),
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Iconsax.people, color: primaryColor),
+            title: Text('ক্রেতাগন', style: TextStyle(
+                color: primaryColor,
+            )),
+            onTap: () {
+              // Navigate to home
+              Navigator.pop(context);
+            },
+          ),
+
+          Divider(
+            color: primaryColor.withValues(alpha: 0.5),
+            thickness: 0.5,
+          ),
+
+          ListTile(
+            leading: Icon(Iconsax.user, color: primaryColor),
+            title: Text('প্রোফাইল', style: TextStyle(
+                color: primaryColor,
+            )),
+            onTap: () {
+              // Navigate to profile
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Iconsax.lifebuoy, color: primaryColor),
+            title: Text('সহায়তা', style: TextStyle(
+                color: primaryColor,
+            )),
+            onTap: () {
+              // Navigate to settings
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Iconsax.logout, color: primaryColor),
+            title: Text('লগ আউট', style: TextStyle(
+                color: primaryColor,
+            )),
+            onTap: () {
+              authController.logout();
+            },
+          ),
+
+        ],
+      ),
+    );
+  }
+}

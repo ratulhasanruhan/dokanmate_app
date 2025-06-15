@@ -38,4 +38,16 @@ class AuthController extends GetxController{
     }
   }
 
+  Future<void> logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Get.offAllNamed('/login'); // Navigate to login screen on logout
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar('একটু সমস্যা হচ্ছে 🤏', e.message ?? 'An error occurred', snackPosition: SnackPosition.TOP);
+    }
+    catch (e) {
+      Get.snackbar('একটু সমস্যা হচ্ছে 🤏', e.toString(), snackPosition: SnackPosition.TOP);
+    }
+  }
+
 }

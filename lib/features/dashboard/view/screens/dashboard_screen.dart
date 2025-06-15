@@ -1,4 +1,5 @@
 import 'package:dokanmate_app/core/utils/app_colors.dart';
+import 'package:dokanmate_app/features/dashboard/view/widgets/dashboard_drawer.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/constants.dart';
@@ -18,7 +19,11 @@ class DashboardScreen extends StatelessWidget {
             color: Colors.white
           ),
         ),
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
       ),
+      drawer: DashboardDrawer(),
     );
   }
 }
