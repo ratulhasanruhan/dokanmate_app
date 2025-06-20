@@ -1,3 +1,4 @@
+import 'package:dokanmate_app/core/routes/app_routes.dart';
 import 'package:dokanmate_app/core/utils/app_colors.dart';
 import 'package:dokanmate_app/core/utils/constants.dart';
 import 'package:dokanmate_app/features/auth/controller/auth_controller.dart';
@@ -65,8 +66,9 @@ class DashboardDrawer extends StatelessWidget {
                 color: primaryColor,
             )),
             onTap: () {
-              // Navigate to home
+              // Navigate to sellers
               Navigator.pop(context);
+              Get.toNamed(AppRoutes.sellers);
             },
           ),
 
@@ -82,7 +84,8 @@ class DashboardDrawer extends StatelessWidget {
             )),
             onTap: () {
               // Navigate to profile
-              Navigator.pop(context);
+//              Get.toNamed(AppRoutes.profile);
+            Navigator.pop(context);
             },
           ),
           ListTile(

@@ -1,13 +1,18 @@
 import 'package:dokanmate_app/core/routes/auth_middleware.dart';
 import 'package:dokanmate_app/features/auth/view/screens/login_screen.dart';
+import 'package:dokanmate_app/features/auth/view/screens/profile_screen.dart';
 import 'package:dokanmate_app/features/dashboard/view/screens/dashboard_screen.dart';
 import 'package:dokanmate_app/features/splash/view/screen/splash_screen.dart';
 import 'package:get/get.dart';
+
+import '../../features/seller/view/screen/seller_screen.dart';
 
 class AppRoutes {
   static const String dashboard = '/dashboard';
   static const String login = '/login';
   static const String splash = '/splash';
+  static const String profile = '/profile';
+  static const String sellers = '/sellers';
 
   static final routes = <GetPage>[
     GetPage(
@@ -15,6 +20,12 @@ class AppRoutes {
       page: () => DashboardScreen(),
       middlewares: [
         AuthMiddleware()
+      ],
+      children: [
+        GetPage(
+            name: profile,
+            page: () => ProfileScreen()
+        )
       ]
     ),
     GetPage(
@@ -24,6 +35,10 @@ class AppRoutes {
     GetPage(
       name: splash,
       page: () => SplashScreen(),
+    ),
+    GetPage(
+      name: sellers,
+      page: () => SellerPage(),
     ),
   ];
 
