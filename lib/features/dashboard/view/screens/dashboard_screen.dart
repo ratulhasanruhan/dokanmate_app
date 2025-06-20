@@ -2,6 +2,7 @@ import 'package:dokanmate_app/core/utils/app_colors.dart';
 import 'package:dokanmate_app/features/dashboard/controller/invoice_controller.dart';
 import 'package:dokanmate_app/features/dashboard/view/widgets/dashboard_drawer.dart';
 import 'package:dokanmate_app/features/seller/model/SellerModel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -33,7 +34,7 @@ class DashboardScreen extends StatelessWidget {
       drawer: DashboardDrawer(),
       body: Obx(() {
         if (controller.isLoading.value && controller.invoices.isEmpty) {
-          return Center(child: CircularProgressIndicator(color: Color(0xFF3498DB)));
+          return Center(child: CupertinoActivityIndicator(color: primaryColor, radius: 30));
         }
 
         if (controller.invoices.isEmpty) {
