@@ -1,4 +1,5 @@
 import 'package:dokanmate_app/features/dashboard/controller/invoice_controller.dart';
+import 'package:dokanmate_app/features/export_data/controller/export_controller.dart';
 import 'package:dokanmate_app/features/seller/model/SellerModel.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class SellerDetailReportPage extends StatelessWidget {
 
   final InvoiceController invoiceController = Get.find<InvoiceController>();
   final SellerController sellerController = Get.find<SellerController>();
+  final ExportController exportController = Get.find<ExportController>();
 
 
   @override
@@ -33,6 +35,13 @@ class SellerDetailReportPage extends StatelessWidget {
           fontWeight: FontWeight.w600,
           fontFamily: 'Ador'
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.file_download, color: Colors.black87),
+            onPressed: () => exportController.exportSellerData(seller),
+            tooltip: 'রিপোর্ট এক্সপোর্ট করুন',
+          ),
+        ],
       ),
       body: Obx(() {
         final allInvoices = invoiceController.invoices;

@@ -1,5 +1,6 @@
 import 'package:dokanmate_app/features/dashboard/controller/invoice_controller.dart';
 import 'package:dokanmate_app/features/seller/controller/seller_controller.dart';
+import 'package:dokanmate_app/features/export_data/controller/export_controller.dart';
 import 'package:get/get.dart';
 
 class DashboardBinding extends Bindings{

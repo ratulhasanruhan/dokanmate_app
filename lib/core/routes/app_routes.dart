@@ -6,6 +6,7 @@ import 'package:dokanmate_app/features/dashboard/view/screens/dashboard_screen.d
 import 'package:dokanmate_app/features/splash/view/screen/splash_screen.dart';
 import 'package:get/get.dart';
 
+import '../../features/export_data/view/screen/export_data_screen.dart';
 import '../../features/seller/view/screen/seller_screen.dart';
 import '../../features/seller/view/screen/seller_report.dart';
 import '../../features/seller/view/screen/add_seller.dart';
@@ -22,6 +23,7 @@ class AppRoutes {
   static const String addSeller = '/add_seller';
   static const String editSeller = '/edit_seller';
   static const String sellerDetailReport = '/seller_detail_report';
+  static const String export_data = '/export_data';
 
   static final routes = <GetPage>[
     GetPage(
@@ -63,6 +65,10 @@ class AppRoutes {
     GetPage(
       name: sellerDetailReport,
       page: () => SellerDetailReportPage(seller: Get.arguments),
+    ),
+    GetPage(
+      name: export_data,
+      page: () => ExportDataScreen(),
     ),
   ];
 
