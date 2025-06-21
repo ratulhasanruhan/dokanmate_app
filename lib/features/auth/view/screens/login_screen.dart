@@ -1,4 +1,4 @@
-import 'package:dokanmate_app/core/utils/app_colors.dart';
+import 'package:dokanmate_app/core/theme/app_colors.dart';
 import 'package:dokanmate_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,14 +39,14 @@ class LoginScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: primaryColor,
+                    color: AppColors.primary,
                   ),
                 ),
                 Text(
                   'ব্যবসা এখন হাতের মুঠোয়',
                   style: TextStyle(
                     fontSize: 16.sp,
-                    color: primaryColor,
+                    color: AppColors.primary,
                   ),
                 ),
                 SizedBox(
@@ -68,7 +68,7 @@ class LoginScreen extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.r),
                     ),
-                    prefixIcon: Icon(Icons.email, color: primaryColor),
+                    prefixIcon: Icon(Icons.email, color: AppColors.primary),
                   ),
                 ),
                 SizedBox(
@@ -90,7 +90,7 @@ class LoginScreen extends StatelessWidget {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.r),
                     ),
-                    prefixIcon: Icon(Icons.lock, color: primaryColor),
+                    prefixIcon: Icon(Icons.lock, color: AppColors.primary),
                   ),
                 ),
                 SizedBox(
@@ -98,7 +98,7 @@ class LoginScreen extends StatelessWidget {
                 ),
                 RoundedLoadingButton(
                     controller: authController.loginButtonController,
-                    color: primaryColor,
+                    color: AppColors.primary,
                     onPressed: (){
                       if (_formKey.currentState!.validate()) {
                         authController.login();

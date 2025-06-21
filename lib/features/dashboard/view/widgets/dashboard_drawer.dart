@@ -1,5 +1,5 @@
 import 'package:dokanmate_app/core/routes/app_routes.dart';
-import 'package:dokanmate_app/core/utils/app_colors.dart';
+import 'package:dokanmate_app/core/theme/app_colors.dart';
 import 'package:dokanmate_app/core/utils/constants.dart';
 import 'package:dokanmate_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class DashboardDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(
-              color: primaryColor.withValues(alpha: 0.2)
+              color: AppColors.primary.withValues(alpha: 0.2)
       ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -52,18 +52,18 @@ class DashboardDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Iconsax.home, color: primaryColor),
+            leading: Icon(Iconsax.home, color: AppColors.primary),
             title: Text('ড্যাশবোর্ড', style: TextStyle(
-                color: primaryColor,
+                color: AppColors.primary,
             )),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: Icon(Iconsax.people, color: primaryColor),
+            leading: Icon(Iconsax.people, color: AppColors.primary),
             title: Text('ক্রেতাগন', style: TextStyle(
-                color: primaryColor,
+                color: AppColors.primary,
             )),
             onTap: () {
               // Navigate to sellers
@@ -73,14 +73,14 @@ class DashboardDrawer extends StatelessWidget {
           ),
 
           Divider(
-            color: primaryColor.withValues(alpha: 0.5),
+            color: AppColors.primary.withValues(alpha: 0.5),
             thickness: 0.5,
           ),
 
           ListTile(
-            leading: Icon(Iconsax.user, color: primaryColor),
+            leading: Icon(Iconsax.user, color: AppColors.primary),
             title: Text('প্রোফাইল', style: TextStyle(
-                color: primaryColor,
+                color: AppColors.primary,
             )),
             onTap: () {
               // Navigate to profile
@@ -89,9 +89,9 @@ class DashboardDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Iconsax.lifebuoy, color: primaryColor),
+            leading: Icon(Iconsax.lifebuoy, color: AppColors.primary),
             title: Text('সহায়তা', style: TextStyle(
-                color: primaryColor,
+                color: AppColors.primary,
             )),
             onTap: () {
               // Navigate to settings
@@ -99,9 +99,9 @@ class DashboardDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Iconsax.logout, color: primaryColor),
+            leading: Icon(Iconsax.logout, color: AppColors.primary),
             title: Text('লগ আউট', style: TextStyle(
-                color: primaryColor,
+                color: AppColors.primary,
             )),
             onTap: () {
               authController.logout();

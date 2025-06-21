@@ -1,4 +1,4 @@
-import 'package:dokanmate_app/core/utils/app_colors.dart';
+import 'package:dokanmate_app/core/theme/app_colors.dart';
 import 'package:dokanmate_app/features/dashboard/controller/invoice_controller.dart';
 import 'package:dokanmate_app/features/dashboard/view/widgets/dashboard_drawer.dart';
 import 'package:dokanmate_app/features/seller/model/SellerModel.dart';
@@ -19,7 +19,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: primaryColor,
+        backgroundColor: AppColors.primary,
         centerTitle: true,
         title: Text(
           appName,
@@ -34,7 +34,7 @@ class DashboardScreen extends StatelessWidget {
       drawer: DashboardDrawer(),
       body: Obx(() {
         if (controller.isLoading.value && controller.invoices.isEmpty) {
-          return Center(child: CupertinoActivityIndicator(color: primaryColor, radius: 18));
+          return Center(child: CupertinoActivityIndicator(color: AppColors.primary, radius: 18));
         }
 
         if (controller.invoices.isEmpty) {
@@ -231,7 +231,7 @@ class DashboardScreen extends StatelessWidget {
       }),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Get.to(() => AddInvoiceScreen()),
-        backgroundColor: primaryColor,
+        backgroundColor: AppColors.primary,
         label: Text(
           'নতুন বিল',
           style: TextStyle(

@@ -1,4 +1,4 @@
-import 'package:dokanmate_app/core/utils/app_colors.dart';
+import 'package:dokanmate_app/core/theme/app_colors.dart';
 import 'package:dokanmate_app/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import '../../../auth/controller/auth_controller.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({super.key});
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
-                color: primaryColor,
+                color: AppColors.primary,
               ),
             ),
             Container(),

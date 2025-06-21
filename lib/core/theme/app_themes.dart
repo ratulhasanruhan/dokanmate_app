@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../utils/app_colors.dart';
+import 'app_colors.dart';
 
 class AppThemes {
   static final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    primaryColor: primaryColor,
+    primaryColor: AppColors.primary,
     colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryColor,
+      seedColor: AppColors.primary,
       brightness: Brightness.light,
     ),
     fontFamily: 'Ador',
