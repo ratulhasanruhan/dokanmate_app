@@ -28,6 +28,7 @@ dependencies:
   iconsax: ^0.0.8
   url_launcher:
   intl:
+  dropdown_search: ^5.0.6
 
   #firebase
   firebase_core: ^3.14.0

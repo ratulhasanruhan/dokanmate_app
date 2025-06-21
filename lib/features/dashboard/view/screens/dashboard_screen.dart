@@ -34,7 +34,7 @@ class DashboardScreen extends StatelessWidget {
       drawer: DashboardDrawer(),
       body: Obx(() {
         if (controller.isLoading.value && controller.invoices.isEmpty) {
-          return Center(child: CupertinoActivityIndicator(color: primaryColor, radius: 22));
+          return Center(child: CupertinoActivityIndicator(color: primaryColor, radius: 18));
         }
 
         if (controller.invoices.isEmpty) {

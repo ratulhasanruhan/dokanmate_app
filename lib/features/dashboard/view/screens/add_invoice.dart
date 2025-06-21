@@ -1,4 +1,8 @@
+import 'package:dokanmate_app/features/seller/model/SellerModel.dart';
+import 'package:dokanmate_app/features/seller/view/screen/add_seller.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import '../../controller/invoice_controller.dart';
 
@@ -25,6 +29,51 @@ class AddInvoiceScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
+        actions: [
+          InkWell(
+            onTap: (){
+              Get.to(() => AddSellerPage());
+            },
+            borderRadius: BorderRadius.circular(6.r),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 12.w,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5.r),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 1,
+                      ),
+                    ),
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 22,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    'নতুন\nক্রেতা',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -80,36 +129,60 @@ class AddInvoiceScreen extends StatelessWidget {
                 color: Color(0xFF2C3E50),
               )),
               SizedBox(height: 8),
+
               Obx(() => Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Color(0xFFDEE2E6)),
                   color: Colors.white,
                 ),
-                child: DropdownButtonFormField<String>(
-                  value: controller.selectedSellerId.value.isEmpty ? null : controller.selectedSellerId.value,
-                  decoration: InputDecoration(
-                    hintText: 'ক্রেতা বেছে নিন',
-                    hintStyle: TextStyle(color: Colors.grey[500]),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    prefixIcon: Icon(Icons.person, color: Color(0xFF16610E)),
+                child: DropdownSearch<SellerModel>(
+                  items: controller.sellerController.sellers, // must be List<SellerModel>
+                  selectedItem: controller.sellerController.sellers.firstWhereOrNull(
+                        (e) => e.id == controller.selectedSellerId.value,
                   ),
-                  dropdownColor: Colors.white,
-                  icon: Icon(Icons.keyboard_arrow_down, color: Color(0xFF16610E)),
-                  items: controller.sellerController.sellers.map((seller) {
-                    return DropdownMenuItem(
-                      value: seller.id,
-                      child: Text(
-                        seller.name + (seller.shopName != null ? ' (${seller.shopName})' : ''),
-                        style: TextStyle(fontSize: 14),
+                  onChanged: (SellerModel? seller) {
+                    if (seller != null) {
+                      controller.selectedSellerId.value = seller.id;
+                    }
+                  },
+                  popupProps: PopupProps.menu(
+                    showSearchBox: true,
+                    searchFieldProps: TextFieldProps(
+                      decoration: InputDecoration(
+                        hintText: 'সার্চ করুন',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       ),
-                    );
-                  }).toList(),
-                  onChanged: (value) => controller.selectedSellerId.value = value ?? '',
+                    ),
+                    itemBuilder: (context, SellerModel item, bool isSelected) {
+                      return ListTile(
+                        title: Text(
+                          '${item.name}${item.shopName != null ? ' (${item.shopName})' : ''}',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      );
+                    },
+                  ),
+                  dropdownDecoratorProps: DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      hintText: 'ক্রেতা বেছে নিন',
+                      hintStyle: TextStyle(color: Colors.grey[500]),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      prefixIcon: Icon(Icons.person, color: Color(0xFF16610E)),
+                    ),
+                  ),
+                  dropdownButtonProps: DropdownButtonProps(
+                    icon: Icon(Icons.keyboard_arrow_down, color: Color(0xFF16610E)),
+                  ),
+                    filterFn: (item, filter) {
+                      final query = filter.toLowerCase();
+                      return item.name.toLowerCase().contains(query) ||
+                          (item.shopName?.toLowerCase().contains(query) ?? false) ||
+                          (item.phone.toLowerCase().contains(query));
+                    }
                 ),
               )),
-
               SizedBox(height: 20),
 
               // Input Fields Row 1

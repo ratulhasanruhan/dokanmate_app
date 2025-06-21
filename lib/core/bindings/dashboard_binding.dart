@@ -6,7 +6,7 @@ class DashboardBinding extends Bindings{
 
   @override
   void dependencies() {
-    Get.put(InvoiceController());
-    Get.lazyPut<SellerController>(() => SellerController());
+    Get.put<SellerController>(SellerController());
+    Get.put<InvoiceController>(InvoiceController());
   }
 }

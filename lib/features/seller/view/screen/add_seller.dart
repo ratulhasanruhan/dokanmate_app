@@ -33,7 +33,7 @@ class _AddSellerPageState extends State<AddSellerPage> {
       await sellerController.addSeller(newSeller);
 
       Get.back();
-      Get.snackbar('সফল', 'বিক্রেতা যোগ হয়েছে',
+      Get.snackbar('সফল', 'ক্রেতা যোগ হয়েছে',
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.green.shade100);
     }
@@ -66,7 +66,7 @@ class _AddSellerPageState extends State<AddSellerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('নতুন বিক্রেতা যোগ করুন'),
+        title: Text('নতুন ক্রেতা যোগ করুন'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

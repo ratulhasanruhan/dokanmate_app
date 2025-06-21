@@ -41,4 +41,10 @@ class SellerModel {
       'createdAt': Timestamp.fromDate(createdAt),
     };
   }
+
+  @override
+  String toString() {
+    return name + (shopName != null ? ' ($shopName)' : '');
+  }
+
 }
