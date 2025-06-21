@@ -1,3 +1,4 @@
+import 'package:dokanmate_app/core/bindings/dashboard_binding.dart';
 import 'package:dokanmate_app/core/routes/auth_middleware.dart';
 import 'package:dokanmate_app/features/auth/view/screens/login_screen.dart';
 import 'package:dokanmate_app/features/auth/view/screens/profile_screen.dart';
@@ -21,12 +22,7 @@ class AppRoutes {
       middlewares: [
         AuthMiddleware()
       ],
-      children: [
-        GetPage(
-            name: profile,
-            page: () => ProfileScreen()
-        )
-      ]
+      binding: DashboardBinding(),
     ),
     GetPage(
       name: login,
@@ -40,6 +36,10 @@ class AppRoutes {
       name: sellers,
       page: () => SellerPage(),
     ),
+    GetPage(
+        name: profile,
+        page: () => ProfileScreen()
+    )
   ];
 
 }

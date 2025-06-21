@@ -13,7 +13,7 @@ class SellerPage extends StatefulWidget {
 }
 
 class _SellerPageState extends State<SellerPage> {
-  final SellerController sellerController = Get.put(SellerController());
+  final SellerController sellerController = Get.find<SellerController>();
   final TextEditingController _searchController = TextEditingController();
 
   @override

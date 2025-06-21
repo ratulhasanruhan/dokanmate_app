@@ -1,7 +1,5 @@
-import 'package:dokanmate_app/features/seller/controller/seller_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../controller/invoice_controller.dart';
 
 class AddInvoiceScreen extends StatelessWidget {
@@ -36,7 +34,7 @@ class AddInvoiceScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: Offset(0, 2),
               ),
@@ -52,7 +50,7 @@ class AddInvoiceScreen extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Color(0xFF16610E).withOpacity(0.1),
+                      color: Color(0xFF16610E).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -99,7 +97,7 @@ class AddInvoiceScreen extends StatelessWidget {
                   ),
                   dropdownColor: Colors.white,
                   icon: Icon(Icons.keyboard_arrow_down, color: Color(0xFF16610E)),
-                  items: controller.sellers.map((seller) {
+                  items: controller.sellerController.sellers.map((seller) {
                     return DropdownMenuItem(
                       value: seller.id,
                       child: Text(
@@ -270,9 +268,9 @@ class AddInvoiceScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Color(0xFF16610E).withOpacity(0.05),
+                  color: Color(0xFF16610E).withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Color(0xFF16610E).withOpacity(0.2)),
+                  border: Border.all(color: Color(0xFF16610E).withValues(alpha: 0.2)),
                 ),
                 child: Row(
                   children: [

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../seller/controller/seller_controller.dart';
 import '../model/InvoiceModel.dart';
 
 class InvoiceController extends GetxController {
@@ -11,7 +12,6 @@ class InvoiceController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final RxList<Invoice> invoices = <Invoice>[].obs;
-  final RxList<SellerModel> sellers = <SellerModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxString selectedSellerId = ''.obs;
 
@@ -21,33 +21,15 @@ class InvoiceController extends GetxController {
   final TextEditingController unitPriceController = TextEditingController();
   final TextEditingController notesController = TextEditingController();
 
+  final SellerController sellerController = Get.find<SellerController>();
+
   @override
   void onInit() {
     super.onInit();
     loadInvoices();
-    loadSellers();
   }
 
   String get currentUserId => _auth.currentUser?.uid ?? '';
-
-  // Load sellers for dropdown
-  Future<void> loadSellers() async {
-    try {
-      isLoading.value = true;
-      final snapshot = await _firestore
-          .collection('main')
-          .doc(currentUserId)
-          .collection('seller')
-          .orderBy('name')
-          .get();
-
-      sellers.value = snapshot.docs.map((doc) => SellerModel.fromMap(doc.data(), doc.id)).toList();
-    } catch (e) {
-      Get.snackbar('দুঃখিত', 'সেলার লোড হচ্ছে না: $e');
-    } finally {
-      isLoading.value = false;
-    }
-  }
 
   // Load invoices
   Future<void> loadInvoices() async {
@@ -209,7 +191,7 @@ class InvoiceController extends GetxController {
 
   SellerModel? getSellerById(String sellerId) {
     try {
-      return sellers.firstWhere((seller) => seller.id == sellerId);
+      return sellerController.sellers.firstWhere((seller) => seller.id == sellerId);
     } catch (e) {
       return null;
     }

@@ -13,7 +13,7 @@ import 'add_invoice.dart';
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
 
-  final InvoiceController controller = Get.put(InvoiceController());
+  final InvoiceController controller = Get.find<InvoiceController>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class DashboardScreen extends StatelessWidget {
       drawer: DashboardDrawer(),
       body: Obx(() {
         if (controller.isLoading.value && controller.invoices.isEmpty) {
-          return Center(child: CupertinoActivityIndicator(color: primaryColor, radius: 30));
+          return Center(child: CupertinoActivityIndicator(color: primaryColor, radius: 22));
         }
 
         if (controller.invoices.isEmpty) {
