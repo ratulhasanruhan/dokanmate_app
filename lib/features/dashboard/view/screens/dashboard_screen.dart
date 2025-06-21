@@ -30,6 +30,13 @@ class DashboardScreen extends StatelessWidget {
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.bar_chart, color: Colors.white),
+            onPressed: () => Get.toNamed('/seller_report'),
+            tooltip: 'ক্রেতা রিপোর্ট',
+          ),
+        ],
       ),
       drawer: DashboardDrawer(),
       body: Obx(() {

@@ -2,205 +2,197 @@ import 'package:dokanmate_app/features/seller/controller/seller_controller.dart'
 import 'package:dokanmate_app/features/seller/model/SellerModel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'add_seller.dart';
-import 'edit_seller.dart';
 
-class SellerPage extends StatefulWidget {
-  const SellerPage({super.key});
+class SellerPage extends StatelessWidget {
+  SellerPage({super.key});
 
-  @override
-  State<SellerPage> createState() => _SellerPageState();
-}
+  final SellerController controller = Get.find<SellerController>();
 
-class _SellerPageState extends State<SellerPage> {
-  final SellerController sellerController = Get.find<SellerController>();
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    _searchController.addListener(() {
-      sellerController.searchQuery.value = _searchController.text;
-    });
-  }
-
-  void _showSearchSheet() {
-    _searchController.text = sellerController.searchQuery.value;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => Padding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom, top: 12, left: 16, right: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _searchController,
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: 'বিক্রেতা খুঁজুন (নাম, ফোন, দোকানের নাম)',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
-            SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  _searchController.clear();
-                  sellerController.searchQuery.value = '';
-                  Navigator.pop(context);
-                },
-                child: Text('বন্ধ করুন', style: TextStyle(fontSize: 16)),
-              ),
-            ),
-            SizedBox(height: 12),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSellerCard(SellerModel seller) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 6),
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Name + Edit icon row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    seller.name,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.edit, color: Colors.lightGreen),
-                  onPressed: () => Get.to(() => EditSellerPage(seller: seller)),
-                  tooltip: 'সম্পাদনা করুন',
-                ),
-              ],
-            ),
-
-            SizedBox(height: 6),
-
-            // Phone row with call button
-            Row(
-              children: [
-                Icon(Icons.phone, size: 18, color: Colors.green[700]),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    seller.phone,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                TextButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.green[50],
-                    minimumSize: Size(80, 32),
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                  onPressed: () => sellerController.callSeller(seller.phone),
-                  icon: Icon(Icons.call, size: 18, color: Colors.green[700]),
-                  label: Text('কল করুন', style: TextStyle(color: Colors.green[700])),
-                )
-              ],
-            ),
-
-            SizedBox(height: 6),
-
-            if (seller.shopName != null && seller.shopName!.isNotEmpty)
-              Row(
-                children: [
-                  Icon(Icons.store, size: 18, color: Colors.grey[600]),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      seller.shopName!,
-                      style: TextStyle(fontSize: 15, color: Colors.grey[800]),
-                    ),
-                  ),
-                ],
-              ),
-
-            if (seller.address != null && seller.address!.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 6.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(Icons.location_on, size: 18, color: Colors.grey[600]),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        seller.address!,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: Text('ক্রেতাগন'),
+        title: Text('ক্রেতাগণ'),
         centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 1,
         actions: [
           IconButton(
             icon: Icon(Icons.search),
-            tooltip: 'বিক্রেতা খুঁজুন',
-            onPressed: _showSearchSheet,
-          )
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('ক্রেতা খুঁজুন'),
+                  content: TextField(
+                    controller: TextEditingController(text: controller.searchQuery.value),
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      hintText: 'নাম, ফোন বা দোকানের নাম লিখুন',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) => controller.searchQuery.value = value,
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        controller.searchQuery.value = '';
+                        Navigator.pop(context);
+                      },
+                      child: Text('মুছুন'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('বন্ধ করুন'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ],
       ),
-      body: Obx(() {
-        final sellers = sellerController.filteredSellers;
-        if (sellers.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        children: [
+          // Search bar
+          Container(
+            padding: EdgeInsets.all(16),
+            child: TextField(
+              controller: TextEditingController(text: controller.searchQuery.value),
+              onChanged: (value) => controller.searchQuery.value = value,
+              decoration: InputDecoration(
+                hintText: 'ক্রেতা খুঁজুন...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            ),
+          ),
+          // Sellers list
+          Expanded(
+            child: Obx(() {
+              final sellers = controller.filteredSellers;
+              if (sellers.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.people_outline,
+                        size: 64,
+                        color: Colors.grey[400],
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        controller.searchQuery.value.isEmpty
+                            ? 'কোনো ক্রেতা নেই'
+                            : 'কোনো ক্রেতা পাওয়া যায়নি',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      if (controller.searchQuery.value.isEmpty)
+                        TextButton(
+                          onPressed: controller.navigateToAddSeller,
+                          child: Text('প্রথম ক্রেতা যোগ করুন'),
+                        ),
+                    ],
+                  ),
+                );
+              }
+              return ListView.builder(
+                itemCount: sellers.length,
+                itemBuilder: (_, i) => _buildSellerItem(sellers[i]),
+              );
+            }),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: controller.navigateToAddSeller,
+        child: Icon(Icons.add),
+        tooltip: 'নতুন ক্রেতা যোগ করুন',
+      ),
+    );
+  }
+
+  Widget _buildSellerItem(SellerModel seller) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        title: Text(
+          seller.name,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 4),
+            Row(
               children: [
-                Text('কোনো বিক্রেতা পাওয়া যায়নি'),
-                SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () => Get.to(() => AddSellerPage()),
-                  child: Text('নতুন বিক্রেতা যোগ করুন'),
-                )
+                Icon(Icons.phone, size: 14, color: Colors.grey[600]),
+                SizedBox(width: 4),
+                Text(
+                  seller.phone,
+                  style: TextStyle(fontSize: 14),
+                ),
               ],
             ),
-          );
-        }
-        return ListView.builder(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          itemCount: sellers.length,
-          itemBuilder: (_, i) => _buildSellerCard(sellers[i]),
-        );
-      }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Get.to(() => AddSellerPage()),
-        tooltip: 'নতুন বিক্রেতা যোগ করুন',
-        child: Icon(Icons.add),
+            if (seller.shopName != null && seller.shopName!.isNotEmpty) ...[
+              SizedBox(height: 2),
+              Row(
+                children: [
+                  Icon(Icons.store, size: 14, color: Colors.grey[600]),
+                  SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      seller.shopName!,
+                      style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(Icons.bar_chart, size: 20, color: Colors.purple[600]),
+              onPressed: () => controller.navigateToSellerDetailReport(seller),
+              tooltip: 'রিপোর্ট দেখুন',
+            ),
+            IconButton(
+              icon: Icon(Icons.call, size: 20, color: Colors.green[600]),
+              onPressed: () => controller.callSeller(seller.phone),
+              tooltip: 'কল করুন',
+            ),
+            IconButton(
+              icon: Icon(Icons.edit, size: 20, color: Colors.blue[500]),
+              onPressed: () => controller.navigateToEditSeller(seller),
+              tooltip: 'সম্পাদনা করুন',
+            ),
+          ],
+        ),
+        onTap: () => controller.navigateToSellerDetailReport(seller),
       ),
     );
   }

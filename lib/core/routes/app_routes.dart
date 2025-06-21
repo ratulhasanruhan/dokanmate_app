@@ -7,6 +7,10 @@ import 'package:dokanmate_app/features/splash/view/screen/splash_screen.dart';
 import 'package:get/get.dart';
 
 import '../../features/seller/view/screen/seller_screen.dart';
+import '../../features/seller/view/screen/seller_report.dart';
+import '../../features/seller/view/screen/add_seller.dart';
+import '../../features/seller/view/screen/edit_seller.dart';
+import '../../features/seller/view/screen/seller_detail_report.dart';
 
 class AppRoutes {
   static const String dashboard = '/dashboard';
@@ -14,6 +18,10 @@ class AppRoutes {
   static const String splash = '/splash';
   static const String profile = '/profile';
   static const String sellers = '/sellers';
+  static const String sellerReport = '/seller_report';
+  static const String addSeller = '/add_seller';
+  static const String editSeller = '/edit_seller';
+  static const String sellerDetailReport = '/seller_detail_report';
 
   static final routes = <GetPage>[
     GetPage(
@@ -33,13 +41,29 @@ class AppRoutes {
       page: () => SplashScreen(),
     ),
     GetPage(
+        name: profile,
+        page: () => ProfileScreen()
+    ),
+    GetPage(
       name: sellers,
       page: () => SellerPage(),
     ),
     GetPage(
-        name: profile,
-        page: () => ProfileScreen()
-    )
+      name: sellerReport,
+      page: () => SellerReportPage(),
+    ),
+    GetPage(
+      name: addSeller,
+      page: () => AddSellerPage(),
+    ),
+    GetPage(
+      name: editSeller,
+      page: () => EditSellerPage(seller: Get.arguments),
+    ),
+    GetPage(
+      name: sellerDetailReport,
+      page: () => SellerDetailReportPage(seller: Get.arguments),
+    ),
   ];
 
 }

@@ -71,6 +71,17 @@ class DashboardDrawer extends StatelessWidget {
               Get.toNamed(AppRoutes.sellers);
             },
           ),
+          ListTile(
+            leading: Icon(Iconsax.chart, color: AppColors.primary),
+            title: Text('রিপোর্ট', style: TextStyle(
+                color: AppColors.primary,
+            )),
+            onTap: () {
+              // Navigate to sellers
+              Navigator.pop(context);
+              Get.toNamed(AppRoutes.sellerReport);
+            },
+          ),
 
           Divider(
             color: AppColors.primary.withValues(alpha: 0.5),

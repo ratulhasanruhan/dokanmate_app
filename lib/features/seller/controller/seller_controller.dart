@@ -15,6 +15,16 @@ class SellerController extends GetxController {
   // Search query
   final RxString searchQuery = ''.obs;
 
+  // Form controllers
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController shopNameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController notesController = TextEditingController();
+
+  // Loading states
+  final RxBool isLoading = false.obs;
+
   // Filtered sellers computed based on searchQuery
   RxList<SellerModel> get filteredSellers {
     if (searchQuery.value.trim().isEmpty) {
@@ -36,6 +46,16 @@ class SellerController extends GetxController {
     _listenToSellers();
   }
 
+  @override
+  void onClose() {
+    nameController.dispose();
+    phoneController.dispose();
+    shopNameController.dispose();
+    addressController.dispose();
+    notesController.dispose();
+    super.onClose();
+  }
+
   void _listenToSellers() {
     _db
         .collection('main')
@@ -50,55 +70,123 @@ class SellerController extends GetxController {
     });
   }
 
+  // Clear form
+  void clearForm() {
+    nameController.clear();
+    phoneController.clear();
+    shopNameController.clear();
+    addressController.clear();
+    notesController.clear();
+  }
+
+  // Load seller data for editing
+  void loadSellerForEdit(SellerModel seller) {
+    nameController.text = seller.name;
+    phoneController.text = seller.phone;
+    shopNameController.text = seller.shopName ?? '';
+    addressController.text = seller.address ?? '';
+    notesController.text = seller.notes ?? '';
+  }
+
+  // Validate form
+  bool validateForm() {
+    if (nameController.text.trim().isEmpty) {
+      Get.snackbar('ত্রুটি', 'নাম প্রয়োজন');
+      return false;
+    }
+    if (phoneController.text.trim().isEmpty) {
+      Get.snackbar('ত্রুটি', 'ফোন নম্বর প্রয়োজন');
+      return false;
+    }
+    return true;
+  }
+
   // Add seller
-  Future<void> addSeller(SellerModel seller) async {
+  Future<void> addSeller() async {
+    if (!validateForm()) return;
+
     try {
+      isLoading.value = true;
+      final seller = SellerModel(
+        id: '',
+        name: nameController.text.trim(),
+        phone: phoneController.text.trim(),
+        shopName: shopNameController.text.trim().isEmpty ? null : shopNameController.text.trim(),
+        address: addressController.text.trim().isEmpty ? null : addressController.text.trim(),
+        notes: notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+        createdAt: DateTime.now(),
+      );
+
       await _db
           .collection('main')
           .doc(uid)
           .collection('seller')
           .add(seller.toMap());
+      
+      clearForm();
       Get.back();
-      Get.snackbar('সফল', 'বিক্রেতা যোগ হয়েছে',
+      Get.snackbar('সফল', 'ক্রেতা যোগ হয়েছে',
           snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green[100]);
     } catch (e) {
-      Get.snackbar('ত্রুটি', 'বিক্রেতা যোগ করা যায়নি');
+      Get.snackbar('ত্রুটি', 'ক্রেতা যোগ করা যায়নি');
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  // Edit seller
-  Future<void> updateSeller(String sellerId, Map<String, dynamic> data) async {
+  // Update seller
+  Future<void> updateSeller(String sellerId) async {
+    if (!validateForm()) return;
+
     try {
+      isLoading.value = true;
+      final data = {
+        'name': nameController.text.trim(),
+        'phone': phoneController.text.trim(),
+        'shopName': shopNameController.text.trim().isEmpty ? null : shopNameController.text.trim(),
+        'address': addressController.text.trim().isEmpty ? null : addressController.text.trim(),
+        'notes': notesController.text.trim().isEmpty ? null : notesController.text.trim(),
+      };
+
       await _db
           .collection('main')
           .doc(uid)
           .collection('seller')
           .doc(sellerId)
           .update(data);
+      
+      clearForm();
       Get.back();
-      Get.snackbar('আপডেট হয়েছে', 'বিক্রেতার তথ্য সংরক্ষিত হয়েছে',
+      Get.snackbar('আপডেট হয়েছে', 'ক্রেতার তথ্য সংরক্ষিত হয়েছে',
           snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.blue[100]);
     } catch (e) {
-      Get.snackbar('ত্রুটি', 'বিক্রেতা আপডেট করা যায়নি');
+      Get.snackbar('ত্রুটি', 'ক্রেতা আপডেট করা যায়নি');
+    } finally {
+      isLoading.value = false;
     }
   }
 
   // Delete seller
   Future<void> deleteSeller(String sellerId) async {
     try {
+      isLoading.value = true;
       await _db
           .collection('main')
           .doc(uid)
           .collection('seller')
           .doc(sellerId)
           .delete();
-      Get.snackbar('মুছে ফেলা হয়েছে', 'বিক্রেতার তথ্য মুছে ফেলা হয়েছে',
+      Get.back();
+      Get.snackbar('মুছে ফেলা হয়েছে', 'ক্রেতার তথ্য মুছে ফেলা হয়েছে',
           snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red[100]);
     } catch (e) {
-      Get.snackbar('ত্রুটি', 'বিক্রেতা মুছে ফেলা যায়নি');
+      Get.snackbar('ত্রুটি', 'ক্রেতা মুছে ফেলা যায়নি');
+    } finally {
+      isLoading.value = false;
     }
   }
 
+  // Call seller
   Future<void> callSeller(String phone) async {
     final telUrl = 'tel:$phone';
     if (await canLaunchUrlString(telUrl)) {
@@ -108,4 +196,48 @@ class SellerController extends GetxController {
     }
   }
 
+  // Show delete confirmation dialog
+  void showDeleteConfirmation(String sellerId, String sellerName) {
+    Get.dialog(
+      AlertDialog(
+        title: Text('মুছে ফেলুন'),
+        content: Text('আপনি কি "$sellerName" কে মুছে ফেলতে চান?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text('না'),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              deleteSeller(sellerId);
+            },
+            child: Text('হ্যাঁ', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Navigate to add seller
+  void navigateToAddSeller() {
+    clearForm();
+    Get.toNamed('/add_seller');
+  }
+
+  // Navigate to edit seller
+  void navigateToEditSeller(SellerModel seller) {
+    loadSellerForEdit(seller);
+    Get.toNamed('/edit_seller', arguments: seller);
+  }
+
+  // Navigate to seller report
+  void navigateToSellerReport() {
+    Get.toNamed('/seller_report');
+  }
+
+  // Navigate to individual seller detail report
+  void navigateToSellerDetailReport(SellerModel seller) {
+    Get.toNamed('/seller_detail_report', arguments: seller);
+  }
 }
