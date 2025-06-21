@@ -1,3 +1,4 @@
+import 'package:dokanmate_app/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controller/seller_controller.dart';
@@ -49,7 +50,7 @@ class AddSellerPage extends StatelessWidget {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: Colors.blue.shade400, width: 2),
+                  borderSide: BorderSide(color: AppColors.primary, width: 2),
                 ),
                 filled: true,
                 fillColor: Colors.grey[50],
@@ -72,7 +73,9 @@ class AddSellerPage extends StatelessWidget {
           color: Colors.black87,
           fontSize: 18,
           fontWeight: FontWeight.w600,
+          fontFamily: 'Ador'
         ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -153,7 +156,7 @@ class AddSellerPage extends StatelessWidget {
                   _buildTextField(
                     label: 'ঠিকানা',
                     textController: controller.addressController,
-                    maxLines: 2,
+                    maxLines: 1,
                     hintText: 'ক্রেতার ঠিকানা (ঐচ্ছিক)',
                     prefixIcon: Icons.location_on,
                   ),
@@ -173,7 +176,7 @@ class AddSellerPage extends StatelessWidget {
             Obx(() => ElevatedButton(
               onPressed: controller.isLoading.value ? null : controller.addSeller,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[600],
+                backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(

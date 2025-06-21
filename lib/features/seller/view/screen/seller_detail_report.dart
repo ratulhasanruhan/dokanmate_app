@@ -7,150 +7,18 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/utils/status.dart';
 import '../../../dashboard/model/InvoiceModel.dart';
+import '../../controller/seller_controller.dart';
 
 class SellerDetailReportPage extends StatelessWidget {
   final SellerModel seller;
+  SellerDetailReportPage({super.key, required this.seller});
 
-  const SellerDetailReportPage({super.key, required this.seller});
+  final InvoiceController invoiceController = Get.find<InvoiceController>();
+  final SellerController sellerController = Get.find<SellerController>();
+
 
   @override
   Widget build(BuildContext context) {
-    final InvoiceController invoiceController = Get.find<InvoiceController>();
-
-    List<Invoice> _getSellerInvoices(List<Invoice> invoices) {
-      return invoices.where((inv) => inv.sellerId == seller.id).toList();
-    }
-
-    Map<String, double> _calculateStats(List<Invoice> sellerInvoices) {
-      double totalSales = 0;
-      double totalPaid = 0;
-      double totalDue = 0;
-      double totalKg = 0;
-      int totalPieces = 0;
-
-      for (var inv in sellerInvoices) {
-        totalSales += inv.totalAmount;
-        totalPaid += inv.amountPaid;
-        totalDue += inv.amountDue;
-        totalKg += inv.kg;
-        totalPieces += inv.pieces.toInt();
-      }
-
-      return {
-        'totalSales': totalSales,
-        'totalPaid': totalPaid,
-        'totalDue': totalDue,
-        'totalKg': totalKg,
-        'totalPieces': totalPieces.toDouble(),
-      };
-    }
-
-    Widget _buildStatCard(String title, String value, IconData icon, Color color) {
-      return Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, size: 24, color: color),
-            SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            SizedBox(height: 4),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
-    }
-
-    Widget _buildInvoiceItem(Invoice invoice) {
-      return Container(
-        margin: EdgeInsets.only(bottom: 8),
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'বিল #${invoice.id?.substring(0, 8) ?? 'N/A'}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: getStatusColor(invoice.status).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    getStatusText(invoice.status),
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: getStatusColor(invoice.status),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: Text('পিস: ${invoice.pieces.toInt()}', style: TextStyle(fontSize: 12)),
-                ),
-                Expanded(
-                  child: Text('ওজন: ${invoice.kg} কেজি', style: TextStyle(fontSize: 12)),
-                ),
-                Expanded(
-                  child: Text('দর: ৳${invoice.unitPrice}', style: TextStyle(fontSize: 12)),
-                ),
-              ],
-            ),
-            SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'মোট: ৳${invoice.totalAmount.toStringAsFixed(0)}',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                ),
-                Text(
-                  DateFormat('dd/MM/yyyy').format(invoice.createdAt),
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -224,16 +92,43 @@ class SellerDetailReportPage extends StatelessWidget {
                     ),
                   ],
                   SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(Icons.phone, size: 16, color: Colors.grey[600]),
-                      SizedBox(width: 4),
-                      Text(
-                        seller.phone,
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ],
+                  InkWell(
+                    onTap: () {
+                      sellerController.callSeller(seller.phone);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.phone, size: 16, color: Colors.grey[600]),
+                        SizedBox(width: 4),
+                        Text(
+                          seller.phone,
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
                   ),
+                  if (seller.address != null && seller.address!.isNotEmpty) ...[
+                    SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.store, size: 14, color: Colors.grey[600]),
+                        SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            seller.shopName!,
+                            style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (seller.notes != null && seller.notes!.isNotEmpty) ...[
+                    SizedBox(height: 8),
+                    Text(
+                      'নোট: ${seller.notes}',
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -346,6 +241,140 @@ class SellerDetailReportPage extends StatelessWidget {
           ],
         );
       }),
+    );
+  }
+  List<Invoice> _getSellerInvoices(List<Invoice> invoices) {
+    return invoices.where((inv) => inv.sellerId == seller.id).toList();
+  }
+
+  Map<String, double> _calculateStats(List<Invoice> sellerInvoices) {
+    double totalSales = 0;
+    double totalPaid = 0;
+    double totalDue = 0;
+    double totalKg = 0;
+    int totalPieces = 0;
+
+    for (var inv in sellerInvoices) {
+      totalSales += inv.totalAmount;
+      totalPaid += inv.amountPaid;
+      totalDue += inv.amountDue;
+      totalKg += inv.kg;
+      totalPieces += inv.pieces.toInt();
+    }
+
+    return {
+      'totalSales': totalSales,
+      'totalPaid': totalPaid,
+      'totalDue': totalDue,
+      'totalKg': totalKg,
+      'totalPieces': totalPieces.toDouble(),
+    };
+  }
+
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 24, color: color),
+          SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInvoiceItem(Invoice invoice) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'বিল #${invoice.id?.substring(0, 8) ?? 'N/A'}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: getStatusColor(invoice.status).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  getStatusText(invoice.status),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: getStatusColor(invoice.status),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: Text('পিস: ${invoice.pieces.toInt()}', style: TextStyle(fontSize: 12)),
+              ),
+              Expanded(
+                child: Text('ওজন: ${invoice.kg} কেজি', style: TextStyle(fontSize: 12)),
+              ),
+              Expanded(
+                child: Text('দর: ৳${invoice.unitPrice}', style: TextStyle(fontSize: 12)),
+              ),
+            ],
+          ),
+          SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'মোট: ৳${invoice.totalAmount.toStringAsFixed(0)}',
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+              ),
+              Text(
+                DateFormat('dd/MM/yyyy').format(invoice.createdAt),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 } 
