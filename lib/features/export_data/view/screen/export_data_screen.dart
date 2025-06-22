@@ -120,6 +120,7 @@ class ExportDataScreen extends StatelessWidget {
                       border: Border.all(color: Colors.blue[200]!),
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [

@@ -147,7 +147,7 @@ class SellerDetailReportPage extends StatelessWidget {
             GridView.count(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
+              crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
               childAspectRatio: 1.2,
