@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Text(
               slogan,
               style: TextStyle(
-                fontSize: 18.sp,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primary,
               ),

@@ -37,7 +37,7 @@ class LoginScreen extends StatelessWidget {
                 Text(
                   'লগইন',
                   style: TextStyle(
-                    fontSize: 24.sp,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
                   ),
@@ -45,7 +45,7 @@ class LoginScreen extends StatelessWidget {
                 Text(
                   'ব্যবসা এখন হাতের মুঠোয়',
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     color: AppColors.primary,
                   ),
                 ),
@@ -110,7 +110,7 @@ class LoginScreen extends StatelessWidget {
                       'লগইন',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 16.sp,
+                        fontSize: 16,
                       ),
                     ),
                 )

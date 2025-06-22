@@ -7,7 +7,6 @@ class ExportDataScreen extends StatelessWidget {
   ExportDataScreen({super.key});
   final ExportController controller = Get.put(ExportController());
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

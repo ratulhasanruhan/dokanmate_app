@@ -328,55 +328,57 @@ class DashboardScreen extends StatelessWidget {
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text('বিলের বিস্তারিত',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600
-                      )),
-                ),
-                IconButton(
-                  onPressed: () => Get.back(),
-                  icon: Icon(Icons.close),
-                ),
-              ],
-            ),
-            Divider(),
-            SizedBox(height: 16),
-
-            _buildDetailRow('ক্রেতা', seller?.name ?? 'অজানা'),
-            if (seller?.shopName != null)
-              _buildDetailRow('দোকান', seller!.shopName!),
-            _buildDetailRow('পিস', '${invoice.pieces.toInt()}'),
-            _buildDetailRow('ওজন', '${invoice.kg} কেজি'),
-            _buildDetailRow('দর', '৳${invoice.unitPrice}/কেজি'),
-
-            if (!invoice.isDraft) ...[
-              Divider(height: 32),
-              _buildDetailRow('মোট টাকা', '৳${invoice.totalAmount.toStringAsFixed(0)}'),
-              if (invoice.amountPaid > 0)
-                _buildDetailRow('জমা', '৳${invoice.amountPaid.toStringAsFixed(0)}'),
-              if (invoice.amountDue > 0)
-                _buildDetailRow('বাকি', '৳${invoice.amountDue.toStringAsFixed(0)}'),
-            ],
-
-            _buildDetailRow('তারিখ', DateFormat('dd MMMM yyyy').format(invoice.createdAt)),
-            _buildDetailRow('স্ট্যাটাস', _getStatusText(invoice.status)),
-
-            if (invoice.notes != null) ...[
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text('বিলের বিস্তারিত',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600
+                        )),
+                  ),
+                  IconButton(
+                    onPressed: () => Get.back(),
+                    icon: Icon(Icons.close),
+                  ),
+                ],
+              ),
+              Divider(),
               SizedBox(height: 16),
-              Text('নোট:', style: TextStyle(
-                  fontWeight: FontWeight.w500
-              )),
-              SizedBox(height: 4),
-              Text(invoice.notes!),
+          
+              _buildDetailRow('ক্রেতা', seller?.name ?? 'অজানা'),
+              if (seller?.shopName != null)
+                _buildDetailRow('দোকান', seller!.shopName!),
+              _buildDetailRow('পিস', '${invoice.pieces.toInt()}'),
+              _buildDetailRow('ওজন', '${invoice.kg} কেজি'),
+              _buildDetailRow('দর', '৳${invoice.unitPrice}/কেজি'),
+          
+              if (!invoice.isDraft) ...[
+                Divider(height: 32),
+                _buildDetailRow('মোট টাকা', '৳${invoice.totalAmount.toStringAsFixed(0)}'),
+                if (invoice.amountPaid > 0)
+                  _buildDetailRow('জমা', '৳${invoice.amountPaid.toStringAsFixed(0)}'),
+                if (invoice.amountDue > 0)
+                  _buildDetailRow('বাকি', '৳${invoice.amountDue.toStringAsFixed(0)}'),
+              ],
+          
+              _buildDetailRow('তারিখ', DateFormat('dd MMMM yyyy').format(invoice.createdAt)),
+              _buildDetailRow('স্ট্যাটাস', _getStatusText(invoice.status)),
+          
+              if (invoice.notes != null) ...[
+                SizedBox(height: 16),
+                Text('নোট:', style: TextStyle(
+                    fontWeight: FontWeight.w500
+                )),
+                SizedBox(height: 4),
+                Text(invoice.notes!),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

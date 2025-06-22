@@ -16,7 +16,7 @@ class SellerDetailReportPage extends StatelessWidget {
 
   final InvoiceController invoiceController = Get.find<InvoiceController>();
   final SellerController sellerController = Get.find<SellerController>();
-  final ExportController exportController = Get.find<ExportController>();
+  final ExportController exportController = Get.put(ExportController());
 
 
   @override
