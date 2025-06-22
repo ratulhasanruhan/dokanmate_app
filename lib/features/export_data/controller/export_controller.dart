@@ -133,7 +133,7 @@ class ExportController extends GetxController {
 
   // Export all sellers to PDF
   Future<void> exportSellers() async {
-    if (kIsWeb) {
+    if (kIsWeb  || Platform.isWindows) {
       try {
         isExporting.value = true;
         exportStatus.value = 'ক্রেতাদের তথ্য প্রস্তুত হচ্ছে...';
@@ -220,7 +220,7 @@ class ExportController extends GetxController {
 
   // Export all invoices to PDF
   Future<void> exportInvoices() async {
-    if (kIsWeb) {
+    if (kIsWeb  || Platform.isWindows) {
       try {
         isExporting.value = true;
         exportStatus.value = 'বিলের তথ্য প্রস্তুত হচ্ছে...';
@@ -307,7 +307,7 @@ class ExportController extends GetxController {
 
   // Export all data (sellers + invoices) to PDF
   Future<void> exportAllData() async {
-    if (kIsWeb) {
+    if (kIsWeb || Platform.isWindows) {
       try {
         isExporting.value = true;
         exportStatus.value = 'সম্পূর্ণ ডাটা প্রস্তুত হচ্ছে...';
@@ -403,7 +403,7 @@ class ExportController extends GetxController {
 
   // Export individual seller data
   Future<void> exportSellerData(SellerModel seller) async {
-    if (kIsWeb) {
+    if (kIsWeb  || Platform.isWindows) {
       try {
         isExporting.value = true;
         exportStatus.value = 'ক্রেতার তথ্য প্রস্তুত হচ্ছে...';
