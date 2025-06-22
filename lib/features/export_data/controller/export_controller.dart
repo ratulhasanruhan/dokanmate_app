@@ -13,6 +13,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:printing/printing.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../dashboard/model/InvoiceModel.dart';
 
@@ -131,6 +133,42 @@ class ExportController extends GetxController {
 
   // Export all sellers to PDF
   Future<void> exportSellers() async {
+    if (kIsWeb) {
+      try {
+        isExporting.value = true;
+        exportStatus.value = 'ক্রেতাদের তথ্য প্রস্তুত হচ্ছে...';
+        final pdf = pw.Document();
+        final logo = await _loadLogo();
+        pdf.addPage(
+          pw.MultiPage(
+            header: (context) => _buildHeader(context, logo, 'ক্রেতাদের তালিকা'),
+            footer: (context) => _buildFooter(context),
+            build: (context) => _buildSellersContent(context),
+            pageTheme: pw.PageTheme(
+              pageFormat: PdfPageFormat.a4,
+              theme: pw.ThemeData.withFont(
+                base: _bengaliFont ?? pw.Font.helvetica(),
+                bold: _bengaliFontBold ?? pw.Font.helveticaBold(),
+              ),
+              margin: pw.EdgeInsets.all(20),
+            ),
+          ),
+        );
+        await Printing.layoutPdf(
+          onLayout: (PdfPageFormat format) async => pdf.save(),
+          name: 'ক্রেতাদের_তালিকা.pdf',
+        );
+        isExporting.value = false;
+        exportStatus.value = '';
+        Get.snackbar('সফল', 'ক্রেতাদের তালিকা ডাউনলোড হয়েছে', backgroundColor: Colors.green[100]);
+      } catch (e) {
+        isExporting.value = false;
+        exportStatus.value = '';
+        Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
+      }
+      return;
+    }
+
     if (!await _requestPermission()) {
       Get.snackbar('ত্রুটি', 'স্টোরেজ অনুমতি প্রয়োজন');
       return;
@@ -146,7 +184,6 @@ class ExportController extends GetxController {
       // Add pages
       pdf.addPage(
         pw.MultiPage(
-          margin: pw.EdgeInsets.all(20),
           header: (context) => _buildHeader(context, logo, 'ক্রেতাদের তালিকা'),
           footer: (context) => _buildFooter(context),
           build: (context) => _buildSellersContent(context),
@@ -156,6 +193,7 @@ class ExportController extends GetxController {
               base: _bengaliFont ?? pw.Font.helvetica(),
               bold: _bengaliFontBold ?? pw.Font.helveticaBold(),
             ),
+            margin: pw.EdgeInsets.all(20),
           ),
         ),
       );
@@ -182,6 +220,42 @@ class ExportController extends GetxController {
 
   // Export all invoices to PDF
   Future<void> exportInvoices() async {
+    if (kIsWeb) {
+      try {
+        isExporting.value = true;
+        exportStatus.value = 'বিলের তথ্য প্রস্তুত হচ্ছে...';
+        final pdf = pw.Document();
+        final logo = await _loadLogo();
+        pdf.addPage(
+          pw.MultiPage(
+            header: (context) => _buildHeader(context, logo, 'বিলের তালিকা'),
+            footer: (context) => _buildFooter(context),
+            build: (context) => _buildInvoicesContent(context),
+            pageTheme: pw.PageTheme(
+              pageFormat: PdfPageFormat.a4,
+              theme: pw.ThemeData.withFont(
+                base: _bengaliFont ?? pw.Font.helvetica(),
+                bold: _bengaliFontBold ?? pw.Font.helveticaBold(),
+              ),
+              margin: pw.EdgeInsets.all(20),
+            ),
+          ),
+        );
+        await Printing.layoutPdf(
+          onLayout: (PdfPageFormat format) async => pdf.save(),
+          name: 'বিলের_তালিকা.pdf',
+        );
+        isExporting.value = false;
+        exportStatus.value = '';
+        Get.snackbar('সফল', 'বিলের তালিকা ডাউনলোড হয়েছে', backgroundColor: Colors.green[100]);
+      } catch (e) {
+        isExporting.value = false;
+        exportStatus.value = '';
+        Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
+      }
+      return;
+    }
+
     if (!await _requestPermission()) {
       Get.snackbar('ত্রুটি', 'স্টোরেজ অনুমতি প্রয়োজন');
       return;
@@ -197,7 +271,6 @@ class ExportController extends GetxController {
       // Add pages
       pdf.addPage(
         pw.MultiPage(
-          margin: pw.EdgeInsets.all(20),
           header: (context) => _buildHeader(context, logo, 'বিলের তালিকা'),
           footer: (context) => _buildFooter(context),
           build: (context) => _buildInvoicesContent(context),
@@ -207,6 +280,7 @@ class ExportController extends GetxController {
               base: _bengaliFont ?? pw.Font.helvetica(),
               bold: _bengaliFontBold ?? pw.Font.helveticaBold(),
             ),
+            margin: pw.EdgeInsets.all(20),
           ),
         ),
       );
@@ -233,6 +307,46 @@ class ExportController extends GetxController {
 
   // Export all data (sellers + invoices) to PDF
   Future<void> exportAllData() async {
+    if (kIsWeb) {
+      try {
+        isExporting.value = true;
+        exportStatus.value = 'সম্পূর্ণ ডাটা প্রস্তুত হচ্ছে...';
+        final pdf = pw.Document();
+        final logo = await _loadLogo();
+        pdf.addPage(
+          pw.MultiPage(
+            header: (context) => _buildHeader(context, logo, 'সম্পূর্ণ ডাটা রিপোর্ট'),
+            footer: (context) => _buildFooter(context),
+            build: (context) => [
+              _buildSummaryContent(context),
+              ..._buildSellersContent(context),
+              ..._buildInvoicesContent(context),
+            ],
+            pageTheme: pw.PageTheme(
+              pageFormat: PdfPageFormat.a4,
+              theme: pw.ThemeData.withFont(
+                base: _bengaliFont ?? pw.Font.helvetica(),
+                bold: _bengaliFontBold ?? pw.Font.helveticaBold(),
+              ),
+              margin: pw.EdgeInsets.all(20),
+            ),
+          ),
+        );
+        await Printing.layoutPdf(
+          onLayout: (PdfPageFormat format) async => pdf.save(),
+          name: 'সম্পূর্ণ_ডাটা_রিপোর্ট.pdf',
+        );
+        isExporting.value = false;
+        exportStatus.value = '';
+        Get.snackbar('সফল', 'সম্পূর্ণ ডাটা ডাউনলোড হয়েছে', backgroundColor: Colors.green[100]);
+      } catch (e) {
+        isExporting.value = false;
+        exportStatus.value = '';
+        Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
+      }
+      return;
+    }
+
     if (!await _requestPermission()) {
       Get.snackbar('ত্রুটি', 'স্টোরেজ অনুমতি প্রয়োজন');
       return;
@@ -248,7 +362,6 @@ class ExportController extends GetxController {
       // Add pages
       pdf.addPage(
         pw.MultiPage(
-          margin: pw.EdgeInsets.all(20),
           header: (context) => _buildHeader(context, logo, 'সম্পূর্ণ ডাটা রিপোর্ট'),
           footer: (context) => _buildFooter(context),
           build: (context) => [
@@ -262,6 +375,7 @@ class ExportController extends GetxController {
               base: _bengaliFont ?? pw.Font.helvetica(),
               bold: _bengaliFontBold ?? pw.Font.helveticaBold(),
             ),
+            margin: pw.EdgeInsets.all(20),
           ),
         ),
       );
@@ -289,6 +403,46 @@ class ExportController extends GetxController {
 
   // Export individual seller data
   Future<void> exportSellerData(SellerModel seller) async {
+    if (kIsWeb) {
+      try {
+        isExporting.value = true;
+        exportStatus.value = 'ক্রেতার তথ্য প্রস্তুত হচ্ছে...';
+        final pdf = pw.Document();
+        final logo = await _loadLogo();
+        final sellerInvoices = invoiceController.invoices.where((inv) => inv.sellerId == seller.id).toList();
+        pdf.addPage(
+          pw.MultiPage(
+            header: (context) => _buildHeader(context, logo, 'ক্রেতার বিস্তারিত রিপোর্ট'),
+            footer: (context) => _buildFooter(context),
+            build: (context) => [
+              _buildSellerDetailContent(context, seller, sellerInvoices),
+              ..._buildSellerInvoicesContent(context, sellerInvoices),
+            ],
+            pageTheme: pw.PageTheme(
+              pageFormat: PdfPageFormat.a4,
+              theme: pw.ThemeData.withFont(
+                base: _bengaliFont ?? pw.Font.helvetica(),
+                bold: _bengaliFontBold ?? pw.Font.helveticaBold(),
+              ),
+              margin: pw.EdgeInsets.all(20),
+            ),
+          ),
+        );
+        await Printing.layoutPdf(
+          onLayout: (PdfPageFormat format) async => pdf.save(),
+          name: '${seller.name}_রিপোর্ট.pdf',
+        );
+        isExporting.value = false;
+        exportStatus.value = '';
+        Get.snackbar('সফল', 'ক্রেতার রিপোর্ট ডাউনলোড হয়েছে', backgroundColor: Colors.green[100]);
+      } catch (e) {
+        isExporting.value = false;
+        exportStatus.value = '';
+        Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
+      }
+      return;
+    }
+
     if (!await _requestPermission()) {
       Get.snackbar('ত্রুটি', 'স্টোরেজ অনুমতি প্রয়োজন');
       return;
@@ -307,7 +461,6 @@ class ExportController extends GetxController {
       // Add pages
       pdf.addPage(
         pw.MultiPage(
-          margin: pw.EdgeInsets.all(20),
           header: (context) => _buildHeader(context, logo, 'ক্রেতার বিস্তারিত রিপোর্ট'),
           footer: (context) => _buildFooter(context),
           build: (context) => [
@@ -320,6 +473,7 @@ class ExportController extends GetxController {
               base: _bengaliFont ?? pw.Font.helvetica(),
               bold: _bengaliFontBold ?? pw.Font.helveticaBold(),
             ),
+            margin: pw.EdgeInsets.all(20),
           ),
         ),
       );
