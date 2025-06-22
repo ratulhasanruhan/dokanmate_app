@@ -83,6 +83,7 @@ class ExportDataScreen extends StatelessWidget {
                     color: AppColors.primary,
                     onTap: controller.exportAllData,
                     controller: controller,
+                    exporting: controller.isExportingAll,
                   ),
 
                   SizedBox(height: 16),
@@ -95,6 +96,7 @@ class ExportDataScreen extends StatelessWidget {
                     color: Colors.green,
                     onTap: controller.exportSellers,
                     controller: controller,
+                    exporting: controller.isExportingSeller,
                   ),
 
                   SizedBox(height: 16),
@@ -107,6 +109,7 @@ class ExportDataScreen extends StatelessWidget {
                     color: Colors.orange,
                     onTap: controller.exportInvoices,
                     controller: controller,
+                    exporting: controller.isExportingInvoice,
                   ),
 
                   SizedBox(height: 24),
@@ -170,9 +173,10 @@ class ExportDataScreen extends StatelessWidget {
     required Color color,
     required VoidCallback onTap,
     required ExportController controller,
+    required RxBool exporting,
   }) {
     return Obx(() {
-      final isExporting = controller.isExporting.value;
+      final isExporting = exporting.value;
       final exportStatus = controller.exportStatus.value;
       
       return Container(

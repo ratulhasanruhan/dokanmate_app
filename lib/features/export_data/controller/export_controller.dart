@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:dokanmate_app/features/dashboard/controller/invoice_controller.dart';
 import 'package:dokanmate_app/features/seller/controller/seller_controller.dart';
 import 'package:dokanmate_app/features/seller/model/SellerModel.dart';
@@ -15,14 +14,16 @@ import 'package:share_plus/share_plus.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:printing/printing.dart';
 import 'package:flutter/foundation.dart';
-
 import '../../dashboard/model/InvoiceModel.dart';
 
 class ExportController extends GetxController {
   final SellerController sellerController = Get.find<SellerController>();
   final InvoiceController invoiceController = Get.find<InvoiceController>();
 
-  final RxBool isExporting = false.obs;
+  final RxBool isExportingAll = false.obs;
+  final RxBool isExportingSeller = false.obs;
+  final RxBool isExportingInvoice = false.obs;
+
   final RxString exportStatus = ''.obs;
 
   // Custom fonts for Bengali support
@@ -135,7 +136,7 @@ class ExportController extends GetxController {
   Future<void> exportSellers() async {
     if (kIsWeb  || Platform.isWindows) {
       try {
-        isExporting.value = true;
+        isExportingSeller.value = true;
         exportStatus.value = 'ক্রেতাদের তথ্য প্রস্তুত হচ্ছে...';
         final pdf = pw.Document();
         final logo = await _loadLogo();
@@ -158,11 +159,11 @@ class ExportController extends GetxController {
           onLayout: (PdfPageFormat format) async => pdf.save(),
           name: 'ক্রেতাদের_তালিকা.pdf',
         );
-        isExporting.value = false;
+        isExportingSeller.value = false;
         exportStatus.value = '';
         Get.snackbar('সফল', 'ক্রেতাদের তালিকা ডাউনলোড হয়েছে', backgroundColor: Colors.green[100]);
       } catch (e) {
-        isExporting.value = false;
+        isExportingSeller.value = false;
         exportStatus.value = '';
         Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
       }
@@ -175,7 +176,7 @@ class ExportController extends GetxController {
     }
 
     try {
-      isExporting.value = true;
+      isExportingSeller.value = true;
       exportStatus.value = 'ক্রেতাদের তথ্য প্রস্তুত হচ্ছে...';
 
       final pdf = pw.Document();
@@ -204,7 +205,7 @@ class ExportController extends GetxController {
       final file = File('${directory.path}/ক্রেতাদের_তালিকা_${DateFormat('yyyy-MM-dd_HH-mm').format(DateTime.now())}.pdf');
       await file.writeAsBytes(await pdf.save());
 
-      isExporting.value = false;
+      isExportingSeller.value = false;
       exportStatus.value = '';
 
       // Share file
@@ -212,7 +213,7 @@ class ExportController extends GetxController {
 
       Get.snackbar('সফল', 'ক্রেতাদের তালিকা এক্সপোর্ট হয়েছে', backgroundColor: Colors.green[100]);
     } catch (e) {
-      isExporting.value = false;
+      isExportingSeller.value = false;
       exportStatus.value = '';
       Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
     }
@@ -222,7 +223,7 @@ class ExportController extends GetxController {
   Future<void> exportInvoices() async {
     if (kIsWeb  || Platform.isWindows) {
       try {
-        isExporting.value = true;
+        isExportingInvoice.value = true;
         exportStatus.value = 'বিলের তথ্য প্রস্তুত হচ্ছে...';
         final pdf = pw.Document();
         final logo = await _loadLogo();
@@ -245,11 +246,11 @@ class ExportController extends GetxController {
           onLayout: (PdfPageFormat format) async => pdf.save(),
           name: 'বিলের_তালিকা.pdf',
         );
-        isExporting.value = false;
+        isExportingInvoice.value = false;
         exportStatus.value = '';
         Get.snackbar('সফল', 'বিলের তালিকা ডাউনলোড হয়েছে', backgroundColor: Colors.green[100]);
       } catch (e) {
-        isExporting.value = false;
+        isExportingInvoice.value = false;
         exportStatus.value = '';
         Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
       }
@@ -262,7 +263,7 @@ class ExportController extends GetxController {
     }
 
     try {
-      isExporting.value = true;
+      isExportingInvoice.value = true;
       exportStatus.value = 'বিলের তথ্য প্রস্তুত হচ্ছে...';
 
       final pdf = pw.Document();
@@ -291,7 +292,7 @@ class ExportController extends GetxController {
       final file = File('${directory.path}/বিলের_তালিকা_${DateFormat('yyyy-MM-dd_HH-mm').format(DateTime.now())}.pdf');
       await file.writeAsBytes(await pdf.save());
 
-      isExporting.value = false;
+      isExportingInvoice.value = false;
       exportStatus.value = '';
 
       // Share file
@@ -299,7 +300,7 @@ class ExportController extends GetxController {
 
       Get.snackbar('সফল', 'বিলের তালিকা এক্সপোর্ট হয়েছে', backgroundColor: Colors.green[100]);
     } catch (e) {
-      isExporting.value = false;
+      isExportingInvoice.value = false;
       exportStatus.value = '';
       Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
     }
@@ -309,7 +310,7 @@ class ExportController extends GetxController {
   Future<void> exportAllData() async {
     if (kIsWeb || Platform.isWindows) {
       try {
-        isExporting.value = true;
+        isExportingAll.value = true;
         exportStatus.value = 'সম্পূর্ণ ডাটা প্রস্তুত হচ্ছে...';
         final pdf = pw.Document();
         final logo = await _loadLogo();
@@ -336,11 +337,11 @@ class ExportController extends GetxController {
           onLayout: (PdfPageFormat format) async => pdf.save(),
           name: 'সম্পূর্ণ_ডাটা_রিপোর্ট.pdf',
         );
-        isExporting.value = false;
+        isExportingAll.value = false;
         exportStatus.value = '';
         Get.snackbar('সফল', 'সম্পূর্ণ ডাটা ডাউনলোড হয়েছে', backgroundColor: Colors.green[100]);
       } catch (e) {
-        isExporting.value = false;
+        isExportingAll.value = false;
         exportStatus.value = '';
         Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
       }
@@ -353,7 +354,7 @@ class ExportController extends GetxController {
     }
 
     try {
-      isExporting.value = true;
+      isExportingAll.value = true;
       exportStatus.value = 'সম্পূর্ণ ডাটা প্রস্তুত হচ্ছে...';
 
       final pdf = pw.Document();
@@ -386,7 +387,7 @@ class ExportController extends GetxController {
       final file = File('${directory.path}/সম্পূর্ণ_ডাটা_রিপোর্ট_${DateFormat('yyyy-MM-dd_HH-mm').format(DateTime.now())}.pdf');
       await file.writeAsBytes(await pdf.save());
 
-      isExporting.value = false;
+      isExportingAll.value = false;
       exportStatus.value = '';
 
       // Share file
@@ -394,7 +395,7 @@ class ExportController extends GetxController {
 
       Get.snackbar('সফল', 'সম্পূর্ণ ডাটা এক্সপোর্ট হয়েছে', backgroundColor: Colors.green[100]);
     } catch (e) {
-      isExporting.value = false;
+      isExportingAll.value = false;
       exportStatus.value = '';
       Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
       debugPrint('Export error: $e');
@@ -405,7 +406,7 @@ class ExportController extends GetxController {
   Future<void> exportSellerData(SellerModel seller) async {
     if (kIsWeb  || Platform.isWindows) {
       try {
-        isExporting.value = true;
+        isExportingSeller.value = true;
         exportStatus.value = 'ক্রেতার তথ্য প্রস্তুত হচ্ছে...';
         final pdf = pw.Document();
         final logo = await _loadLogo();
@@ -432,11 +433,11 @@ class ExportController extends GetxController {
           onLayout: (PdfPageFormat format) async => pdf.save(),
           name: '${seller.name}_রিপোর্ট.pdf',
         );
-        isExporting.value = false;
+        isExportingSeller.value = false;
         exportStatus.value = '';
         Get.snackbar('সফল', 'ক্রেতার রিপোর্ট ডাউনলোড হয়েছে', backgroundColor: Colors.green[100]);
       } catch (e) {
-        isExporting.value = false;
+        isExportingSeller.value = false;
         exportStatus.value = '';
         Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
       }
@@ -449,7 +450,7 @@ class ExportController extends GetxController {
     }
 
     try {
-      isExporting.value = true;
+      isExportingSeller.value = true;
       exportStatus.value = 'ক্রেতার তথ্য প্রস্তুত হচ্ছে...';
 
       final pdf = pw.Document();
@@ -484,7 +485,7 @@ class ExportController extends GetxController {
       final file = File('${directory.path}/${seller.name}_রিপোর্ট_${DateFormat('yyyy-MM-dd_HH-mm').format(DateTime.now())}.pdf');
       await file.writeAsBytes(await pdf.save());
 
-      isExporting.value = false;
+      isExportingSeller.value = false;
       exportStatus.value = '';
 
       // Share file
@@ -492,7 +493,7 @@ class ExportController extends GetxController {
 
       Get.snackbar('সফল', 'ক্রেতার রিপোর্ট এক্সপোর্ট হয়েছে', backgroundColor: Colors.green[100]);
     } catch (e) {
-      isExporting.value = false;
+      isExportingSeller.value = false;
       exportStatus.value = '';
       Get.snackbar('ত্রুটি', 'এক্সপোর্ট করতে সমস্যা হয়েছে: $e');
     }
