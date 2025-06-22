@@ -9,5 +9,6 @@ class DashboardBinding extends Bindings{
   void dependencies() {
     Get.put<SellerController>(SellerController());
     Get.put<InvoiceController>(InvoiceController());
+    Get.put<ExportController>(ExportController());
   }
 }
